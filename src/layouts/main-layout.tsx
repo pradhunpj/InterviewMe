@@ -1,6 +1,8 @@
-import Footer from "@/components/ui/footer"
+
+import Container from "@/components/ui/container"
+import { Footer } from "@/components/ui/footer"
 import Header from "@/components/ui/header"
-import { Container } from "lucide-react"
+
 import { Outlet } from "react-router-dom"
 
 export const MainLayout = () => {

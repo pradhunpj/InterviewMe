@@ -1,12 +1,11 @@
 import { cn } from "@/lib/utils";
 import { useAuth } from "@clerk/clerk-react";
 import LogoContainer from "@/components/ui/logo-container";
-
-import Container from "./container";
 import { NavigationRoutes } from "./navigation-routes";
 import { NavLink } from "react-router-dom";
 import ProfileContainer from "./profile-container";
 import ToggleContainer from "./toggle-container";
+import Container from "./container";
 
 
   const Header = () => {
