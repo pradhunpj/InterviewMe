@@ -15,7 +15,7 @@ export const NavigationRoutes = ({isMobile = false} : NavigationRoutesProps) => 
               <NavLink
                   key={route.href} to={route.href}
                   className={({ isActive }) => cn("text-base text-neutral-600",
-                      isActive && "text-neutral-900 font-semibold")
+                      isActive && "text-emerald-500 font-semibold")
                   }>
                  {route.label}
                   </NavLink>

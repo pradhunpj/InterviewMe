@@ -31,30 +31,47 @@
     --radius: 0.5rem
   }
   .dark {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 0% 83.1%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%
+    /* Background and Text */
+    --background: 240 10% 10%; /* Dark gray background */
+    --foreground: 0 0% 98%; /* White text */
+  
+    /* Navbar */
+    --navbar-background: 240 10% 15%; /* Slightly lighter gray for navbar */
+    --navbar-foreground: 0 0% 98%; /* White text for navbar */
+  
+    /* Card and Popover */
+    --card: 240 10% 15%; /* Slightly lighter gray for cards */
+    --card-foreground: 0 0% 98%; /* White text on cards */
+    --popover: 240 10% 15%; /* Slightly lighter gray for popovers */
+    --popover-foreground: 0 0% 98%; /* White text on popovers */
+  
+    /* Primary, Secondary, and Accent */
+    --primary: 217 91% 60%; /* Blue primary color */
+    --primary-foreground: 0 0% 98%; /* White text on primary elements */
+    --secondary: 215 27% 32%; /* Darker blue for secondary elements */
+    --secondary-foreground: 0 0% 98%; /* White text on secondary elements */
+    --accent: 217 91% 60%; /* Blue accent color */
+    --accent-foreground: 0 0% 98%; /* White text on accent elements */
+  
+    /* Muted and Destructive */
+    --muted: 240 10% 20%; /* Muted gray */
+    --muted-foreground: 0 0% 70%; /* Light gray text on muted elements */
+    --destructive: 0 84% 60%; /* Red for destructive elements */
+    --destructive-foreground: 0 0% 98%; /* White text on destructive elements */
+  
+    /* Border and Input */
+    --border: 240 10% 25%; /* Light gray border */
+    --input: 240 10% 15%; /* Dark gray input background */
+  
+    /* Ring */
+    --ring: 217 91% 60%; /* Blue ring color */
+  
+    /* Chart Colors */
+    --chart-1: 220 70% 50%; /* Blue chart color */
+    --chart-2: 160 60% 45%; /* Green chart color */
+    --chart-3: 30 80% 55%; /* Orange chart color */
+    --chart-4: 280 65% 60%; /* Purple chart color */
+    --chart-5: 340 75% 55%; /* Pink chart color */
   }
 }
 

@@ -1,9 +1,7 @@
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
-
 import { Interview } from "@/types";
-
 import { CustomBreadCrumb } from "./custom-bread-crumb";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -29,6 +27,7 @@ import {
   doc,
   serverTimestamp,
   updateDoc,
+  deleteDoc,
 } from "firebase/firestore";
 import { db } from "@/config/firebase.config";
 
@@ -71,30 +70,22 @@ export const FormMockInterview = ({ initialData }: FormMockInterviewProps) => {
     ? { title: "Updated..!", description: "Changes saved successfully..." }
     : { title: "Created..!", description: "New Mock Interview created..." };
 
-    const cleanAiResponse = (responseText: string) => {
-      try {
-        // Step 1: Trim any surrounding whitespace
-        let cleanText = responseText.trim();
-    
-        // Step 2: Remove any occurrences of "json" or code block symbols (``` or `)
-        cleanText = cleanText.replace(/(json|```|`)/g, "");
-    
-        // Step 3: Extract a JSON array by capturing text between square brackets
-        const jsonArrayMatch = cleanText.match(/\[.*\]/s);
-        if (jsonArrayMatch) {
-          cleanText = jsonArrayMatch[0];
-        } else {
-          // If no array is found, assume the entire response is a JSON array
-          cleanText = `[${cleanText}]`;
-        }
-    
-        // Step 4: Parse the clean JSON text into an array of objects
-        return JSON.parse(cleanText);
-      } catch (error) {
-        console.error("Failed to clean or parse AI response:", error);
-        throw new Error("Invalid AI response format: " + (error as Error)?.message);
+  const cleanAiResponse = (responseText: string) => {
+    try {
+      let cleanText = responseText.trim();
+      cleanText = cleanText.replace(/(json|```|`)/g, "");
+      const jsonArrayMatch = cleanText.match(/\[.*\]/s);
+      if (jsonArrayMatch) {
+        cleanText = jsonArrayMatch[0];
+      } else {
+        cleanText = `[${cleanText}]`;
       }
-    };
+      return JSON.parse(cleanText);
+    } catch (error) {
+      console.error("Failed to clean or parse AI response:", error);
+      throw new Error("Invalid AI response format: " + (error as Error)?.message);
+    }
+  };
 
   const generateAiResponse = async (data: FormData) => {
     const prompt = `
@@ -113,11 +104,11 @@ export const FormMockInterview = ({ initialData }: FormMockInterviewProps) => {
 
         The questions should assess skills in ${data?.techStack} development and best practices, problem-solving, and experience handling complex requirements. Please format the output strictly as an array of JSON objects without any additional labels, code blocks, or explanations. Return only the JSON array with questions and answers.
         `;
-        const aiResult = await chatSession.sendMessage(prompt);
-        const rawResponse = aiResult.response.text(); // Get the raw response
-        console.log("Raw AI Response:", rawResponse); // Log the raw response
-      
-        const cleanedResponse = cleanAiResponse(rawResponse);
+    const aiResult = await chatSession.sendMessage(prompt);
+    const rawResponse = aiResult.response.text();
+    console.log("Raw AI Response:", rawResponse);
+
+    const cleanedResponse = cleanAiResponse(rawResponse);
 
     return cleanedResponse;
   };
@@ -156,7 +147,25 @@ export const FormMockInterview = ({ initialData }: FormMockInterviewProps) => {
 
       navigate("/generate", { replace: true });
     } catch (error) {
-      console.log(error)
+      console.log(error);
+      toast.error("Error..", {
+        description: `Something went wrong. Please try again later`,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const onDelete = async () => {
+    try {
+      if (initialData) {
+        setLoading(true);
+        await deleteDoc(doc(db, "interviews", initialData.id));
+        toast("Deleted..!", { description: "Interview deleted successfully..." });
+        navigate("/generate", { replace: true });
+      }
+    } catch (error) {
+      console.log(error);
       toast.error("Error..", {
         description: `Something went wrong. Please try again later`,
       });
@@ -187,7 +196,12 @@ export const FormMockInterview = ({ initialData }: FormMockInterviewProps) => {
         <Headings title={title} isSubHeading />
 
         {initialData && (
-          <Button size={"icon"} variant={"ghost"}>
+          <Button
+            size={"icon"}
+            variant={"ghost"}
+            onClick={onDelete}
+            disabled={loading}
+          >
             <Trash2 className="min-w-4 min-h-4 text-red-500" />
           </Button>
         )}

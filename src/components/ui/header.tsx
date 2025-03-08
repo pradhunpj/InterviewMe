@@ -6,6 +6,7 @@ import { NavLink } from "react-router-dom";
 import ProfileContainer from "./profile-container";
 import ToggleContainer from "./toggle-container";
 import Container from "./container";
+import { ModeToggle } from "./mode-toggle";
 
 
   const Header = () => {
@@ -26,14 +27,13 @@ import Container from "./container";
                <NavLink
                to={"/generate"}
                className={({ isActive }) => cn("text-base text-neutral-600",
-                   isActive && "text-neutral-900 font-semibold")
+                   isActive && "text-emerald-500 font-semibold")
                }>
               Take an Interview 
                </NavLink>
            ) } 
           </nav>
-          
-
+           <ModeToggle/>
           {/* profile*/}
           <div className="ml-auto flex items-center gap-6">
             <ProfileContainer/>
