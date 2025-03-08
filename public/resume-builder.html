@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editable Resume Builder</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .header h2 {
+            font-size: 1.2em;
+            font-weight: lighter;
+            letter-spacing: 1.5px;
+            margin-bottom: 20px;
+        }
+
+        .contact-info {
+            text-align: center;
+            font-size: 0.9em;
+            color: #555;
+        }
+
+        .section-title {
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #333;
+            margin-top: 40px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+        }
+
+        .section-content {
+            font-size: 0.9em;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .section-content p, .section-content ul {
+            margin: 10px 0;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .skills-list li {
+            flex: 1 1 30%;
+            list-style: none;
+            margin: 5px 0;
+        }
+
+        /* Download Button */
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #434343;
+            color: white;
+            text-align: center;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 20px 0;
+        }
+
+        .button:hover {
+            background-color: #262627;
+        }
+
+        .form-container {
+            margin: 20px 0;
+        }
+
+        .form-container input, .form-container textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        label {
+            font-weight: bold;
+            margin-top: 15px;
+            display: block;
+        }
+
+        .add-field-button {
+            background-color: #434343;
+            margin-top: 10px;
+        }
+
+        .dynamic-field {
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            position: relative;
+        }
+
+        .dynamic-field textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .trash-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 1.2em;
+            cursor: pointer;
+            color: #555454;
+        }
+
+        .trash-button:hover {
+            color: #000000;
+        }
+
+        .drag-handle {
+            cursor: move;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 1.2em;
+            color: #666;
+        }
+
+        .drag-handle:hover {
+            color: #333;
+        }
+
+        .draggable-field {
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            position: relative;
+        }
+
+        .draggable-field.dragging {
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Editable form section -->
+        <div class="form-container">
+            <!-- Static fields -->
+            <div class="draggable-field" draggable="true">
+                <label for="nameInput">Full Name:</label>
+                <input type="text" id="nameInput" placeholder="Enter your full name">
+            </div>
+
+            <div class="draggable-field" draggable="true">
+                <label for="titleInput">Professional Title:</label>
+                <input type="text" id="titleInput" placeholder="Enter your professional title">
+            </div>
+
+            <div class="draggable-field" draggable="true">
+                <label for="contactInput">Contact Information:</label>
+                <input type="text" id="contactInput" placeholder="Phone | Email | Location | LinkedIn">
+            </div>
+
+            <div class="draggable-field" draggable="true">
+                <span class="drag-handle"></span>
+                <label for="overviewInput">Overview:</label>
+                <textarea id="overviewInput" placeholder="Enter a brief professional summary"></textarea>
+            </div>
+
+            <div class="draggable-field" draggable="true">
+                <span class="drag-handle"></span>
+                <label for="experienceInput">Work Experience:</label>
+                <textarea id="experienceInput" placeholder="Describe your work experience (e.g., company name, position, date range, responsibilities)"></textarea>
+            </div>
+
+            <div class="draggable-field" draggable="true">
+                <span class="drag-handle"></span>
+                <label for="projectsInput">Projects:</label>
+                <textarea id="projectsInput" placeholder="Describe your projects"></textarea>
+            </div>
+
+            <div class="draggable-field" draggable="true">
+                <span class="drag-handle"></span>
+                <label for="skillsInput">Skills:</label>
+                <textarea id="skillsInput" placeholder="e.g., Communication, Strategy, Team Management"></textarea>
+            </div>
+
+            <div class="draggable-field" draggable="true">
+                <span class="drag-handle"></span>
+                <label for="educationInput">Education:</label>
+                <textarea id="educationInput" placeholder="Enter your educational background (e.g., degree, university, date)"></textarea>
+            </div>
+
+            <!-- Button to add more fields -->
+            <button class="button add-field-button" onclick="addField()">Add More Fields</button>
+
+            <button class="button" onclick="updateResume()">Update CV</button>
+        </div>
+
+        <!-- CV preview section -->
+        <div id="cv" class="cv-container">
+            <div class="header">
+                <h1 id="name">Full Name</h1>
+                <h2 id="title">Professional Title</h2>
+                <div class="contact-info" id="contact-info">Contact Information</div>
+            </div>
+
+            <div class="section" id="overviewSection">
+                <h3 class="section-title">Overview</h3>
+                <div class="section-content">
+                    <p id="overview">Your overview goes here.</p>
+                </div>
+            </div>
+
+            <div class="section" id="experienceSection">
+                <h3 class="section-title">Work Experience</h3>
+                <div class="section-content" id="experience">
+                    <p>Work experience will be shown here.</p>
+                </div>
+            </div>
+
+            <div class="section" id="projectsSection">
+                <h3 class="section-title">Projects</h3>
+                <div class="section-content" id="projects">
+                    <p>Projects will be displayed here.</p>
+                </div>
+            </div>
+
+            <div class="section" id="skillsSection">
+                <h3 class="section-title">Skills</h3>
+                <div class="section-content">
+                    <ul class="skills-list" id="skills">
+                        <li>Skills will be listed here.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section" id="educationSection">
+                <h3 class="section-title">Education</h3>
+                <div class="section-content" id="education">
+                    <p>Education details will be shown here.</p>
+                </div>
+            </div>
+
+            <!-- Dynamic sections will be added here -->
+            <div id="dynamicSections"></div>
+
+            <!-- Download button to be hidden in PDF -->
+            <button class="button" id="downloadBtn">Download as PDF</button>
+        </div>
+    </div>
+
+    <script>
+        // Function to update CV with user input
+        function updateResume() {
+            // Update static fields
+            document.getElementById('name').innerText = document.getElementById('nameInput').value || 'Full Name';
+            document.getElementById('title').innerText = document.getElementById('titleInput').value || 'Professional Title';
+            document.getElementById('contact-info').innerText = document.getElementById('contactInput').value || 'Contact Information';
+            document.getElementById('overview').innerText = document.getElementById('overviewInput').value || 'Your professional overview goes here.';
+            document.getElementById('experience').innerText = document.getElementById('experienceInput').value || 'Work experience will be shown here.';
+            document.getElementById('projects').innerText = document.getElementById('projectsInput').value || 'Projects will be displayed here.';
+
+            // Update skills
+            let skillsArray = document.getElementById('skillsInput').value.split(',');
+            let skillsHTML = '';
+            skillsArray.forEach(skill => {
+                if (skill.trim()) {
+                    skillsHTML += `<li>${skill.trim()}</li>`;
+                }
+            });
+            document.getElementById('skills').innerHTML = skillsHTML || '<li>Skills will be listed here.</li>';
+
+            // Update education
+            document.getElementById('education').innerText = document.getElementById('educationInput').value || 'Education details will be shown here.';
+
+            // Hide sections if no input is provided
+            document.getElementById('overviewSection').style.display = document.getElementById('overviewInput').value ? 'block' : 'none';
+            document.getElementById('experienceSection').style.display = document.getElementById('experienceInput').value ? 'block' : 'none';
+            document.getElementById('projectsSection').style.display = document.getElementById('projectsInput').value ? 'block' : 'none';
+            document.getElementById('skillsSection').style.display = document.getElementById('skillsInput').value ? 'block' : 'none';
+            document.getElementById('educationSection').style.display = document.getElementById('educationInput').value ? 'block' : 'none';
+
+            // Update dynamic fields
+            updateDynamicFields();
+        }
+
+        // Function to add more fields
+        function addField() {
+            const fieldContainer = document.createElement('div');
+            fieldContainer.className = 'draggable-field';
+            fieldContainer.draggable = true;
+
+            // Drag handle
+            const dragHandle = document.createElement('span');
+            dragHandle.className = 'drag-handle';
+            dragHandle.innerHTML = '';
+            fieldContainer.appendChild(dragHandle);
+
+            // Field Name Input
+            const fieldNameInput = document.createElement('input');
+            fieldNameInput.type = 'text';
+            fieldNameInput.placeholder = 'Enter field name (e.g., Certifications)';
+            fieldContainer.appendChild(fieldNameInput);
+
+            // Field Content Textarea
+            const fieldContentTextarea = document.createElement('textarea');
+            fieldContentTextarea.placeholder = 'Enter field content';
+            fieldContainer.appendChild(fieldContentTextarea);
+
+            // Trash button
+            const trashButton = document.createElement('button');
+            trashButton.className = 'trash-button';
+            trashButton.innerHTML = '<i class="fas fa-trash"></i>';
+            trashButton.onclick = () => {
+                fieldContainer.remove();
+            };
+            fieldContainer.appendChild(trashButton);
+
+            document.querySelector('.form-container').insertBefore(fieldContainer, document.querySelector('.add-field-button'));
+
+            // Add drag-and-drop functionality
+            fieldContainer.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('text/plain', fieldNameInput.value);
+                fieldContainer.classList.add('dragging');
+            });
+
+            fieldContainer.addEventListener('dragend', () => {
+                fieldContainer.classList.remove('dragging');
+            });
+        }
+
+        // Function to update dynamic fields in the CV
+        function updateDynamicFields() {
+            const dynamicFields = document.querySelectorAll('.draggable-field');
+            const dynamicSections = document.getElementById('dynamicSections');
+            dynamicSections.innerHTML = '';
+
+            dynamicFields.forEach(field => {
+                const fieldNameInput = field.querySelector('input');
+                const fieldContentTextarea = field.querySelector('textarea');
+
+                if (fieldNameInput && fieldContentTextarea && fieldNameInput.value && fieldContentTextarea.value) {
+                    const section = document.createElement('div');
+                    section.className = 'section';
+
+                    const sectionTitle = document.createElement('h3');
+                    sectionTitle.className = 'section-title';
+                    sectionTitle.innerText = fieldNameInput.value;
+                    section.appendChild(sectionTitle);
+
+                    const sectionContent = document.createElement('div');
+                    sectionContent.className = 'section-content';
+                    sectionContent.innerHTML = `<p>${fieldContentTextarea.value}</p>`;
+                    section.appendChild(sectionContent);
+
+                    dynamicSections.appendChild(section);
+                }
+            });
+        }
+
+        // Drag-and-drop functionality for reordering fields
+        const formContainer = document.querySelector('.form-container');
+        formContainer.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            const dragging = document.querySelector('.dragging');
+            const afterElement = getDragAfterElement(formContainer, e.clientY);
+            if (afterElement) {
+                formContainer.insertBefore(dragging, afterElement);
+            } else {
+                formContainer.appendChild(dragging);
+            }
+        });
+
+        function getDragAfterElement(container, y) {
+            const draggableElements = [...container.querySelectorAll('.draggable-field:not(.dragging)')];
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+        }
+
+        // Function to download CV as PDF (with A4 paper size)
+        document.getElementById('downloadBtn').addEventListener('click', function() {
+            const element = document.querySelector('.cv-container');
+            var opt = {
+                margin: 0.5,
+                filename: 'Resume.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+            };
+            
+            // Temporarily hide the download button before generating the PDF
+            document.getElementById('downloadBtn').style.display = 'none';
+
+            // Generate PDF
+            html2pdf().from(element).set(opt).save().then(function() {
+                // Show the download button again after PDF is generated
+                document.getElementById('downloadBtn').style.display = 'block';
+            });
+        });
+    </script>
+</body>
+</html>

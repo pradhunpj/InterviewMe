@@ -15,15 +15,16 @@ const HomePage = () => {
                         InterviewMe
                     </span>
                     <span className="text-gray-500 font-extrabold">
-                            -A better way to 
-                        </span>
+                            - A better way to 
+                        </span> 
                         <br />
-                        Improve your interview...
+                        <span className="text-black-500 font-extrabold"> Improve your Interview...
+                          </span>
                     
                     </h2>
 
                     <p className="mt-4 text-muted-foreground text-sm">
-                        vsdhvbslidvhlsbdvjs
+                        
                     </p>
 
                 </div>
@@ -51,19 +52,22 @@ const HomePage = () => {
           />
 
           <div className="absolute top-4 left-4 px-4 py-2 rounded-md bg-white/40 backdrop-blur-md">
-            Inteviews Copilot&copy;
+            InteviewMe&copy;
           </div>
 
           <div className="hidden md:block absolute w-80 bottom-4 right-4 px-4 py-2 rounded-md bg-white/60 backdrop-blur-md">
             <h2 className="text-neutral-800 font-semibold">Developer</h2>
             <p className="text-sm text-neutral-500">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam
-              distinctio natus, quos voluptatibus magni sapiente.
-            </p>
+            Transform the way you prepare, gain confidence, and boost your chances of landing your dream job. <br></br>
+            
+            Click below to start.
 
-            <Button className="mt-3">
-              Generate <Sparkles />
+            </p>
+            <Link to={"/generate"} className="w-full">
+            <Button className="w-3/4">
+            Generate <Sparkles className="ml-2" />
             </Button>
+            </Link>
           </div>
         </div>
 
@@ -80,7 +84,7 @@ const HomePage = () => {
       <Container className="py-8 space-y-8">
         <h2 className="tracking-wide text-xl text-gray-800 font-semibold">
           Unleash your potential with personalized AI insights and targeted
-          interview practice.
+          Interview practice.
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
@@ -94,16 +98,25 @@ const HomePage = () => {
 
           <div className="col-span-1 md:col-span-2 gap-8 max-h-96 min-h-96 w-full flex flex-col items-center justify-center text-center">
             <p className="text-center text-muted-foreground">
-              Transform the way you prepare, gain confidence, and boost your
-              chances of landing your dream job. Let AI be your edge in
-              today&apos;s competitive job market.
+            We hope you find it highly beneficial. You can also create a resume here.
             </p>
 
-            <Link to={"/generate"} className="w-full">
+            {/* <Link to={"/generate"} className="w-full">
               <Button className="w-3/4">
                 Generate <Sparkles className="ml-2" />
               </Button>
-            </Link>
+            </Link> */}
+
+            <Button
+                className="w-3/4"
+                onClick={() => (window.location.href = "/resume-builder.html")}
+                  >Create Resume <Sparkles className="ml-2" />
+            </Button>
+
+
+
+
+
           </div>
         </div>
       </Container>
